@@ -26,4 +26,32 @@ public class QuestController {
         Integer currentUserId = 1;
         return questService.getQuestsByUserId(currentUserId);
     }
+
+    /*
+     * クエスト登録API
+     * POST /api/quests
+     */
+    @PostMapping
+    public Quest createQuest(@RequestBody Quest quest) {
+        // ※本来はログイン中のユーザーIDを取得しますが、今回はテスト用にID=1で固定します
+        quest.setUserId(1);
+        return questService.createQuest(quest);
+    }
+    /*
+     * クエスト完了API
+     * PUT /api/quests/{questId}/complete
+     */
+    @PutMapping("/{questId}/complete")
+    public Quest completeQuest(@PathVariable Integer questId) {
+        return questService.completeQuest(questId);
+    }
+
+    /*
+     * クエスト削除（破棄）API
+     * DELETE /api/quests/{questId}
+     */
+    @DeleteMapping("/{questId}")
+    public void deleteQuest(@PathVariable Integer questId) {
+        questService.deleteQuest(questId);
+    }
 }
