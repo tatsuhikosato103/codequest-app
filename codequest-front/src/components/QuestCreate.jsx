@@ -15,7 +15,7 @@ export default function QuestCreate({ currentUser, onAddQuest, onCancel }) {
       </header>
 
       <div style={{ maxWidth: "400px", margin: "0 auto" }}>
-        <p>・新規クエスト登録</p>
+        <p>新規クエスト登録</p>
         <form onSubmit={onSubmit}>
           <div style={{ marginBottom: "15px" }}>
             <label style={{ display: "block", marginBottom: "5px" }}>
