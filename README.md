@@ -72,6 +72,7 @@ https://codequest-app-two.vercel.app/
 
 
 ER図
+
 ```mermaid
 erDiagram
     USERS ||--o{ QUESTS : "受注する"
@@ -86,7 +87,11 @@ erDiagram
     
     QUESTS {
         int questId PK
-
+        int userId  FK
+        string title
+        string description
+        boolean is_completed
+    }
 
 
 
