@@ -24,7 +24,6 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        // ▼ サーバーが何を受け取ったかコンソールに出力する（のぞき穴）
         System.out.println("=== ログイン通信テスト ===");
         System.out.println("受信したID: [" + loginRequest.getLoginId() + "]");
         System.out.println("受信したPASS: [" + loginRequest.getPassword() + "]");
