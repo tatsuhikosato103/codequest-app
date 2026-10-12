@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_BASE_URL } from "../config";
 
 export default function Login({ onLoginSuccess }) {
   const [loginId, setLoginId] = useState("");
@@ -9,7 +10,7 @@ export default function Login({ onLoginSuccess }) {
     e.preventDefault();
     setError(""); // エラーをリセット
 
-    fetch("http://localhost:8080/api/login", {
+    fetch(`${API_BASE_URL}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ loginId, password }),
