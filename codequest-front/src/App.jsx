@@ -1,40 +1,16 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import Login from "./components/Login";
 
 function App() {
   const [currentView, setCurrentView] = useState("login");
   const [quests, setQuests] = useState([]);
   const [selectedQuest, setSelectedQuest] = useState(null);
-  const [loginId, setLoginId] = useState("");
-  const [password, setPassword] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
 
   // --- API通信処理 ---
-  const handleLogin = (e) => {
-    e.preventDefault();
-    fetch("http://localhost:8080/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ loginId: loginId, password: password }),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("ログインに失敗しました");
-        return response.json();
-      })
-      .then((userData) => {
-        setCurrentUser(userData);
-        setCurrentView("list");
-      })
-      .catch((error) => {
-        console.error("ログインエラー:", error);
-        alert("IDまたはパスワードが間違っています。");
-      });
-  };
-
   const handleLogout = () => {
     setCurrentUser(null);
-    setLoginId("");
-    setPassword("");
     setCurrentView("login");
   };
 
@@ -115,53 +91,16 @@ function App() {
   };
 
   // ログイン画面
-  const renderLogin = () => (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h1 style={{ color: "blue", marginBottom: "40px" }}>CodeQuest</h1>
-      <form
-        onSubmit={handleLogin}
-        style={{ display: "inline-block", textAlign: "left" }}
-      >
-        <div style={{ marginBottom: "15px" }}>
-          <label style={{ display: "block", marginBottom: "5px" }}>
-            ログインID
-          </label>
-          <input
-            type="text"
-            value={loginId}
-            onChange={(e) => setLoginId(e.target.value)}
-            style={{ padding: "8px", width: "200px" }}
-            required
-          />
-        </div>
-        <div style={{ marginBottom: "30px" }}>
-          <label style={{ display: "block", marginBottom: "5px" }}>
-            パスワード
-          </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ padding: "8px", width: "200px" }}
-            required
-          />
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <button
-            type="submit"
-            style={{
-              padding: "10px 40px",
-              backgroundColor: "#e6f2ff",
-              border: "1px solid #b3d4ff",
-              cursor: "pointer",
-            }}
-          >
-            ログイン
-          </button>
-        </div>
-      </form>
-    </div>
-  );
+  const renderLogin = () => {
+    return (
+      <Login
+        onLoginSuccess={(user) => {
+          setCurrentUser(user);
+          setCurrentView("list");
+        }}
+      />
+    );
+  };
 
   //クエスト一覧（トップ）画面
   const renderList = () => (
