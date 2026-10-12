@@ -92,23 +92,30 @@ erDiagram
 
 
 
-# ローカル環境でのセットアップ
+#ローカル環境でのセットアップ
 
 本プロジェクトはDockerを使用してローカル環境を構築します。以下の手順に従って起動してください。
 
-# 1. 前提条件
-手元のPCに以下がインストールされていることを確認してください。
-- Docker および Docker Compose
+#必要環境
+- Docker Desktop
 - Git
 
-# 2. リポジトリのクローン
-プロジェクトをクローンし、バックエンドのディレクトリへ移動します。
+#インストール手順
 
-```bash
+# 1. リポジトリをクローン
 git clone [https://github.com/tatsuhikosato103/codequest-app.git](https://github.com/tatsuhikosato103/codequest-app.git)
 cd codequest-app/codequest-back/codequest-back
-        string title
-        string description
-        boolean isCompleted
-        int userId FK
-    }
+
+# 2. 環境変数ファイルを作成
+cp .env.example .env
+※作成した .env ファイルに、テスト用のデータベース接続情報（DB_URL, DB_USER, DB_PASS）を記載してください。
+
+# 3. Dockerコンテナをビルド・起動
+docker compose build
+docker compose up -d
+
+# 4. 動作確認
+コンテナが起動したら、ブラウザまたはAPIクライアントで以下にアクセスして動作を確認してください。
+
+ローカルAPIサーバー: http://localhost:8080
+
