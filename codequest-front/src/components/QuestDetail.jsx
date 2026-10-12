@@ -1,6 +1,6 @@
 export default function QuestDetail({ quest, onBack, onDelete }) {
   return (
-    <div>
+    <div style={{ minWidth: "300px" }}>
       <header
         style={{
           display: "flex",
@@ -18,13 +18,14 @@ export default function QuestDetail({ quest, onBack, onDelete }) {
         </button>
       </header>
 
-      <div style={{ maxWidth: "400px", margin: "0 auto", textAlign: "center" }}>
+      <div style={{ textAlign: "center" }}>
         <h3 style={{ marginBottom: "30px" }}>クエスト詳細</h3>
 
         <div style={{ textAlign: "left", marginBottom: "20px" }}>
           <p style={{ fontWeight: "bold", margin: "0 0 5px 0" }}>
             【クエスト名】
           </p>
+
           <p
             style={{
               margin: "0 0 15px 0",
