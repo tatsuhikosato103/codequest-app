@@ -73,25 +73,8 @@ https://codequest-app-two.vercel.app/
 
 ER図
 
-```mermaid
-erDiagram
-    USERS ||--o{ QUESTS : "受注する"
-    
-    USERS {
-        int id PK
-        string loginId
-        string password
-        int level
-        int exp
-    }
-    
-    QUESTS {
-        int questId PK
-        int userId  FK
-        string title
-        string description
-        boolean is_completed
-    }
+<img width="602" height="245" alt="image" src="https://github.com/user-attachments/assets/5c6916d5-a9af-4a72-b7bd-e3899ef12e6b" />
+
 
 
 
