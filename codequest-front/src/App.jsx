@@ -3,6 +3,7 @@ import "./App.css";
 import Login from "./components/Login";
 import QuestCreate from "./components/QuestCreate";
 import QuestDetail from "./components/QuestDetail";
+import { API_BASE_URL } from "./config";
 
 function App() {
   const [currentView, setCurrentView] = useState("login");
@@ -18,7 +19,7 @@ function App() {
 
   // クエスト一覧取得
   const fetchQuests = () => {
-    fetch("http://localhost:8080/api/quests")
+    fetch(`${API_BASE_URL}/api/quests`)
       .then((response) => response.json())
       .then((data) => setQuests(data))
       .catch((error) => console.error("データ取得エラー:", error));
@@ -43,7 +44,7 @@ function App() {
   };
 
   const handleAddQuest = (newQuestData) => {
-    fetch("http://localhost:8080/api/quests", {
+    fetch(`${API_BASE_URL}/api/quests`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newQuestData),
@@ -57,7 +58,7 @@ function App() {
 
   // クエスト完了
   const handleCompleteQuest = (questId) => {
-    fetch(`http://localhost:8080/api/quests/${questId}/complete`, {
+    fetch(`${API_BASE_URL}/api/quests/${questId}/complete`, {
       method: "PUT",
     })
       .then((response) => {
@@ -87,7 +88,7 @@ function App() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/quests/${questId}`, {
+    fetch(`${API_BASE_URL}/api/quests/${questId}`, {
       method: "DELETE",
     })
       .then(() => {
