@@ -84,6 +84,23 @@ erDiagram
     
     QUESTS {
         int questId PK
+
+
+# ローカル環境でのセットアップ
+
+本プロジェクトはDockerを使用してローカル環境を構築します。以下の手順に従って起動してください。
+
+# 1. 前提条件
+手元のPCに以下がインストールされていることを確認してください。
+- Docker および Docker Compose
+- Git
+
+# 2. リポジトリのクローン
+プロジェクトをクローンし、バックエンドのディレクトリへ移動します。
+
+```bash
+git clone [https://github.com/tatsuhikosato103/codequest-app.git](https://github.com/tatsuhikosato103/codequest-app.git)
+cd codequest-app/codequest-back/codequest-back
         string title
         string description
         boolean isCompleted
