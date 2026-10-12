@@ -91,7 +91,7 @@ ER図
 #インストール手順
 
 # 1. リポジトリをクローン
-git clone [https://github.com/tatsuhikosato103/codequest-app.git](https://github.com/tatsuhikosato103/codequest-app.git)
+git clone https://github.com/tatsuhikosato103/codequest-app.git
 cd codequest-app/codequest-back/codequest-back
 
 # 2. 環境変数ファイルを作成
