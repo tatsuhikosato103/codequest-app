@@ -1,13 +1,15 @@
 # 1. ビルド環境
-FROM maven:3.8.5-openjdk-21 AS build
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
-COPY src .
-RUN mvn clean package -DskipTests
-FROM openjdk:21-jdk-slim
+COPY . .
+RUN sed -i 's/\r$//' gradlew
+RUN chmod +x gradlew
+RUN ./gradlew build -x test
+
+# 2. 実行環境
+FROM eclipse-temurin:21-jre
 WORKDIR /app
-# ビルドしたJARファイルをコピー
-COPY --from=build /app/target/*.jar app.jar
-# ポート8080を開放
+# Gradleで生成されたJARファイルをコピー
+COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
-# アプリケーションの起動
 ENTRYPOINT ["java", "-jar", "app.jar"]
