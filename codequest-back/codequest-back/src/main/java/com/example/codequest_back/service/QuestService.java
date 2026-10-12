@@ -2,6 +2,7 @@ package com.example.codequest_back.service;
 
 import com.example.codequest_back.entity.Quest;
 import com.example.codequest_back.repository.QuestRepository;
+import com.example.codequest_back.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -9,10 +10,12 @@ import java.util.List;
 public class QuestService {
 
     private final QuestRepository questRepository;
+    private final UserRepository userRepository;
 
     // RepositoryをServiceに注入（DI: 依存性の注入）します
-    public QuestService(QuestRepository questRepository) {
+    public QuestService(QuestRepository questRepository,UserRepository userRepository) {
         this.questRepository = questRepository;
+        this.userRepository = userRepository;
     }
 
     // 指定したユーザーのクエスト一覧を取得する
@@ -30,9 +33,34 @@ public class QuestService {
     }
     //クエストを完了状態に更新する
     public Quest completeQuest(Integer questId) {
-        // IDでクエストを検索し、存在すれば完了状態(true)にして保存する
         return questRepository.findById(questId).map(quest -> {
-            quest.setIsCompleted(true);
+            System.out.println("=== クエスト完了処理 ===");
+            System.out.println("完了するクエストID: " + questId);
+            System.out.println("このクエストの持ち主(UserID): " + quest.getUserId());
+
+            if (!quest.getIsCompleted()) {
+                quest.setIsCompleted(true);
+
+                // UserIDがセットされていない場合
+                if (quest.getUserId() == null) {
+                    System.out.println("【エラー】クエストにUserIDがありません！");
+                } else {
+                    // UserIDをもとにデータベースを検索
+                    userRepository.findById(quest.getUserId()).ifPresentOrElse(user -> {
+                        int newExp = user.getExp() + 100;
+                        int newLevel = 1 + (newExp / 300);
+
+                        user.setExp(newExp);
+                        user.setLevel(newLevel);
+                        userRepository.save(user);
+                        System.out.println("【成功】ユーザー(" + user.getLoginId() + ") のEXPを保存しました");
+                    }, () -> {
+                        System.out.println("【エラー】UserID: " + quest.getUserId() + " のユーザーがデータベースに見つかりません！");
+                    });
+                }
+            } else {
+                System.out.println("このクエストはすでに完了済みです。");
+            }
             return questRepository.save(quest);
         }).orElseThrow(() -> new RuntimeException("クエストが見つかりません"));
     }

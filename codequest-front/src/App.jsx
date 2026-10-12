@@ -2,14 +2,42 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  // 現在表示している画面を管理するState ('login', 'list', 'create', 'detail')
   const [currentView, setCurrentView] = useState("login");
-
-  // クエストデータと選択中のクエストを管理するState
   const [quests, setQuests] = useState([]);
   const [selectedQuest, setSelectedQuest] = useState(null);
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
 
   // --- API通信処理 ---
+  const handleLogin = (e) => {
+    e.preventDefault();
+    fetch("http://localhost:8080/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ loginId: loginId, password: password }),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("ログインに失敗しました");
+        return response.json();
+      })
+      .then((userData) => {
+        setCurrentUser(userData);
+        setCurrentView("list");
+      })
+      .catch((error) => {
+        console.error("ログインエラー:", error);
+        alert("IDまたはパスワードが間違っています。");
+      });
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setLoginId("");
+    setPassword("");
+    setCurrentView("login");
+  };
+
   // クエスト一覧取得
   const fetchQuests = () => {
     fetch("http://localhost:8080/api/quests")
@@ -44,11 +72,24 @@ function App() {
     fetch(`http://localhost:8080/api/quests/${questId}/complete`, {
       method: "PUT",
     })
-      .then((response) => response.json())
-      .then(() => {
-        fetchQuests(); // 成功したら一覧を再取得して画面を更新する
+      .then((response) => {
+        if (!response.ok) throw new Error("サーバーでの完了処理に失敗しました");
+        return response.json();
       })
-      .catch((error) => console.error("完了エラー:", error));
+      .then(() => {
+        fetchQuests();
+        // 成功した場合のみ画面上のEXPを更新
+        setCurrentUser((prevUser) => {
+          if (!prevUser) return prevUser;
+          const newExp = prevUser.exp + 100;
+          const newLevel = 1 + Math.floor(newExp / 300);
+          return { ...prevUser, exp: newExp, level: newLevel };
+        });
+      })
+      .catch((error) => {
+        console.error("完了エラー:", error);
+        alert("クエストの完了に失敗しました。");
+      });
   };
 
   // クエスト削除
@@ -78,10 +119,7 @@ function App() {
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1 style={{ color: "blue", marginBottom: "40px" }}>CodeQuest</h1>
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setCurrentView("list");
-        }}
+        onSubmit={handleLogin}
         style={{ display: "inline-block", textAlign: "left" }}
       >
         <div style={{ marginBottom: "15px" }}>
@@ -90,6 +128,8 @@ function App() {
           </label>
           <input
             type="text"
+            value={loginId}
+            onChange={(e) => setLoginId(e.target.value)}
             style={{ padding: "8px", width: "200px" }}
             required
           />
@@ -100,6 +140,8 @@ function App() {
           </label>
           <input
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             style={{ padding: "8px", width: "200px" }}
             required
           />
@@ -136,8 +178,10 @@ function App() {
       >
         <h2 style={{ color: "blue", margin: 0 }}>CodeQuest</h2>
         <div style={{ textAlign: "right", fontSize: "14px" }}>
-          <div>ステータス</div>
-          <div>Lv.1 EXP: 0</div>
+          <div>{currentUser?.loginId} ステータス</div>
+          <div style={{ fontWeight: "bold" }}>
+            Lv.{currentUser?.level} EXP: {currentUser?.exp}
+          </div>
         </div>
       </header>
 
@@ -207,7 +251,7 @@ function App() {
         }}
       >
         <button
-          onClick={() => setCurrentView("login")}
+          onClick={handleLogout}
           style={{
             color: "blue",
             background: "none",
@@ -229,6 +273,7 @@ function App() {
       handleAddQuest({
         title: e.target.title.value,
         description: e.target.description.value,
+        userId: currentUser.id || currentUser.userId,
       });
     };
 

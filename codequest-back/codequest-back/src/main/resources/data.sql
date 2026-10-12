@@ -1,5 +1,5 @@
 INSERT INTO users (login_id, password, level, exp)
-VALUES ('player1', 'password123', 1, 0);
+VALUES ('user', 'password', 1, 0);
 
 INSERT INTO quests (user_id, title, description, is_completed)
 VALUES
